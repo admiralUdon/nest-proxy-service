@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERAS Container Registry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="w-screen h-screen bg-gray-900">
+    <div class="flex justify-center items-center w-full h-full">
+        <div class="flex flex-col w-96 bg-white bg-opacity-70 p-4 rounded-lg">
+            <div class="flex flex-col mb-8">
+                <span class="text-2xl font-bold mb-2 text-center">Session Expired</span>
+                <span class="text-sm font-semibold text-center">Your session has expired. Please log in again to continue using {{ app_title }}</span>
+            </div>
+            <div class="flex items-center justify-center">
+                <button class="flex flex-row items-center justify-center bg-gray-900 rounded-full p-3">
+                    <a href="/login" class="text-sm text-white">Back to Login</a>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
