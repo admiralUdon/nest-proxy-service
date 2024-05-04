@@ -1,0 +1,11 @@
+# Authentication
+authentication:
+  mechanism: session # jwt,session
+  methods: ['basic','azure'] # basic,azure,google 
+  secret: "SuP3R$3cRe7P@$$w0rd"
+  expiresIn: 60
+
+# API Throttling
+api-throttle:
+  total: 60
+  limit: 5
