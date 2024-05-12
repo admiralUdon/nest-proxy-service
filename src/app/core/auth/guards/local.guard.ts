@@ -1,15 +1,29 @@
-import { Injectable, ExecutionContext, CanActivate, UnauthorizedException, Logger } from '@nestjs/common';
-import { AuthGuard as PassportAuthGuard, IAuthModuleOptions } from '@nestjs/passport';
+/**
+ * 
+ * Please update this so that we can track the latest version.
+ * 
+ * Author           : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Contributor : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Updated     : 12 May 2024
+ * 
+ * **/
+
+import { Injectable, ExecutionContext, CanActivate, Logger, HttpStatus } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { DefaultHttpException } from 'app/shared/custom/http-exception/default.http-exception';
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import { Session } from 'express-session';
 
 @Injectable()
-export class AuthGuard extends PassportAuthGuard('basic') implements CanActivate {
+export class LocalGuard extends AuthGuard('local') implements CanActivate {
 
-    private readonly logger = new Logger(AuthGuard.name);
+    private readonly logger = new Logger(LocalGuard.name);
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        console.log("canActivate AuthGuard");
         try {
             const request = context.switchToHttp().getRequest();
             const result = (await super.canActivate(context)) as boolean;
@@ -22,36 +36,7 @@ export class AuthGuard extends PassportAuthGuard('basic') implements CanActivate
         }
     }
 
-    // getAuthenticateOptions(context: ExecutionContext): IAuthModuleOptions<any> {
-    //     console.log("getAuthenticateOptions AuthGuard");
-    //     try {
-            
-    //         const request: ExpressRequest & { session: Session & { user: any } } = context.switchToHttp().getRequest();
-    //         const strategy = request.body["authentication-strategy"] || request.headers["authentication-strategy"] || "basic";
-    
-    //         console.log({
-    //             defaultStrategy: strategy,
-    //             session: true
-    //         });
-            
-    //         /**
-    //          * TODO: Figure this out
-    //          */
-    //         this.logger.debug("AuthGuard - Need to figure this out");
-    //         return {
-    //             defaultStrategy: strategy,
-    //             session: true
-    //         };
-
-    //     } catch (error) {
-    //         this.logger.error(error);
-    //         throw new Error(error);
-    //     }
-
-    // }
-
-    handleRequest(error: any, user: any, info: any, context: ExecutionContext) {
-        console.log("handleRequest AuthGuard");
+    handleRequest<TUser = any>(error: any, user: any, info: any, context: ExecutionContext): TUser {
         try {
 
             const response: ExpressResponse = context.switchToHttp().getResponse();
@@ -61,7 +46,7 @@ export class AuthGuard extends PassportAuthGuard('basic') implements CanActivate
              * request.session.user -> after login baru ada ada value 
              * request.user -> undefined after login, will only have value after serialized
              */
-            user = request.session.user ?? request.user;
+            user = request.session.user ?? request.user ?? user;
         
             // Check if response has been sent already
             if (response.headersSent) {
@@ -76,13 +61,16 @@ export class AuthGuard extends PassportAuthGuard('basic') implements CanActivate
                 //  If user are requesting for /api and unauthenticated
                 if (request && request.url.includes("/api/")) {
                     // throw unauthorized error
-                    throw new UnauthorizedException();
+                    throw new DefaultHttpException({
+                        statusCode: HttpStatus.UNAUTHORIZED,
+                        message: "User not authorized"
+                    });
                 }
     
                 //  If user are requesting url except /api (page, html) and still unauthenticated
                 if (request && !request.url.includes("/api/")) {
                     // Redirect to login page
-                    response.redirect('/login');
+                    response.redirect('/login?status=failed');
                 }
             }
     
@@ -95,8 +83,7 @@ export class AuthGuard extends PassportAuthGuard('basic') implements CanActivate
 
         } catch (error) {
             this.logger.error(error);
-            throw new UnauthorizedException({error});
+            throw new DefaultHttpException(error);
         }
-        
     }
 }

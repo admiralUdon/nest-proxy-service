@@ -4,9 +4,11 @@ import { AppCode } from 'app/core/types/app.type';
 import { DefaultHttpException } from 'app/shared/custom/http-exception/default.http-exception';
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import { ProxyService } from './proxy.service';
-import { AuthGuard } from 'app/core/auth/guards/auth.guard';
+import { LocalGuard } from 'app/core/auth/guards/local.guard';
+import { ApiExcludeController } from '@nestjs/swagger';
 
 @Controller()
+@ApiExcludeController()
 export class ProxyController {
     
     constructor(
@@ -17,7 +19,7 @@ export class ProxyController {
     }
 
     @Get()
-    @UseGuards(AuthGuard)
+    @UseGuards(LocalGuard)
     async reverseProxy(
         @Request() request: ExpressRequest, 
         @Response() response: ExpressResponse

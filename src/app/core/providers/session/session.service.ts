@@ -1,3 +1,13 @@
+/**
+ * 
+ * Please update this so that we can track the latest version.
+ * 
+ * Author           : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Contributor : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Updated     : 12 May 2024
+ * 
+ * **/
+
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
 
@@ -12,7 +22,7 @@ export class SessionService extends PassportSerializer {
     }
 
 
-    serializeUser(user: any, done: (err: Error, user: any) => void): any {
+    serializeUser(user: any, done: (err: Error, user: any) => void): void  {
         try {
             this.logger.debug("serializeUser", user);
             if (!user) {
@@ -25,11 +35,10 @@ export class SessionService extends PassportSerializer {
         }
     }
 
-    async deserializeUser(user: any, done: (err: Error, user: any) => void): Promise<any> {
+    deserializeUser(user: any, done: (err: Error, user: any) => void): void {
         try {
             this.logger.debug("deserializeUser", user);
-            const { username } = user;
-            if (username !== "admin") {
+            if (!user) {
                 throw new Error ("Unknown user, user not being deserialized");
             }
             return done(null, user);

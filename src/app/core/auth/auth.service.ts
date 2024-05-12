@@ -1,9 +1,23 @@
-// auth.service.ts
+/**
+ * 
+ * Please update this so that we can track the latest version.
+ * 
+ * Author           : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Contributor : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Updated     : 12 May 2024
+ * 
+ * **/
+
 import { Injectable } from '@nestjs/common';
 import { LogService } from 'app/core/providers/log/log.service';
+import { IProfile } from 'passport-azure-ad';
 
 @Injectable()
 export class AuthService {
+
+    /**
+     * Constructor
+     */
 
     constructor(
         private _logService: LogService
@@ -11,12 +25,25 @@ export class AuthService {
         this._logService.registerClassName(AuthService.name)
     }
 
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
     // Implement your own logic to validate username/password
     async validateUser(username: string, password: string): Promise<any> {
         try {
-            this._logService.debug("validateUser", { username, password })
+            this._logService.debug("validateUser", { username, password });
+
+            const { admin_username, superadmin_password } = { 
+                admin_username: process.env.SUPERADMIN_USERNAME, 
+                superadmin_password: process.env.SUPERADMIN_PASSWORD 
+            } ?? {};
             
-            if (username === 'admin' && password === 'password') {
+            if (
+                admin_username && superadmin_password && 
+                username === admin_username && 
+                password === superadmin_password
+            ) {
                 return { username, password };
             }
             
@@ -28,14 +55,10 @@ export class AuthService {
     }
 
     // Implement your own logic to validate Azure AD user
-    async validateAzureADUser(token: string): Promise<any> {
+    async validateAzureADUser(profile: IProfile): Promise<any> {
         try {
-            this._logService.debug("Need to debug this");
-            // Use the token to validate the user
-            // Example: You can decode the token and verify its authenticity
-            // If the token is valid, return the user object
-            // If not, return null
-            return { username: 'azure_user' };
+            this._logService.debug("validateAzureADUser", profile);
+            return profile;
         } catch (error) {
             this._logService.debug(error);
             return null;

@@ -1,3 +1,13 @@
+/**
+ * 
+ * Please update this so that we can track the latest version.
+ * 
+ * Author           : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Contributor : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Updated     : 12 May 2024
+ * 
+ * **/
+
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
 
@@ -6,10 +16,18 @@ export class JwtService {
 
     private readonly logger = new Logger(JwtService.name);
 
+    /**
+     * Constructor
+     */
+
     constructor(
         private readonly _nestJwtService: NestJwtService
     ) {
     }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
 
     generateJwtToken(payload: any, secret: string): string {
         return this._nestJwtService.sign(payload, { secret });

@@ -6,11 +6,19 @@ import { Request } from 'express';
 @Injectable()
 export class ProxyService {
 
+    /**
+     * Constructor
+     */
+
     constructor(
         private readonly _logService: LogService
     ) {
         this._logService.registerClassName(ProxyService.name);
     }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
     
     reverseProxy(targetUrl: string, request: Request): Promise<AxiosResponse>
     {

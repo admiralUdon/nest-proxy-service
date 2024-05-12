@@ -2,9 +2,9 @@
  * 
  * Please update this so that we can track the latest version.
  * 
- * Author           : Ahmad Miqdaad (ahmadmiqdad.aziz[at]teras.com.my)
- * Last Contributor : Ahmad Miqdaad (ahmadmiqdad.aziz[at]teras.com.my)
- * Last Updated     : 2 May 2024
+ * Author           : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Contributor : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Updated     : 12 May 2024
  * 
  * **/
 
@@ -32,6 +32,10 @@ interface TransactionI {
 export class LogService extends Logger {
     
     private readonly folderPath = resolve(process.env.FILE_LOG_PATH ?? "./src/storage/logs");
+
+    /**
+     * Constructor
+     */
 
     constructor(
         private _winstonLogger: winston.Logger,
@@ -80,6 +84,11 @@ export class LogService extends Logger {
             throw new Error(error);
         }
     }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
 
     registerClassName(moduleName: string) {
         this.context = moduleName;

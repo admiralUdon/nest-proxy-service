@@ -1,10 +1,24 @@
 import { Controller, Get, Request, Logger, Render } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
+import { LogService } from 'app/core/providers/log/log.service';
 
 @Controller()
+@ApiExcludeController()
 export class ExpiredController {
 
-    private readonly logger = new Logger(ExpiredController.name);
-    
+    /**
+     * Constructor
+     */
+
+    constructor(
+        private _logService: LogService
+    ){
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
     @Get()
     @Render('expired')
     azureOAuth2Login(@Request() request) {

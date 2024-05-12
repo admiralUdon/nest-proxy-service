@@ -1,9 +1,10 @@
 import { Routes } from "@nestjs/core";
-import { ExpiredModule } from "app/modules/expired/expired.module";
 import { HelloModule } from "app/modules/hello/hello.module";
-import { LoginModule } from "app/modules/login/login.module";
-import { LogoutModule } from "app/modules/logout/logout.module";
 import { ProxyModule } from "app/modules/proxy/proxy.module";
+import { UserModule } from "app/modules/user/user.module";
+import { ExpiredModule } from "app/views/expired/expired.module";
+import { LoginModule } from "app/views/login/login.module";
+import { LogoutModule } from "app/views/logout/logout.module";
 
 export const appRoutes: Routes = [
     { path: 'login', module: LoginModule },
@@ -13,6 +14,7 @@ export const appRoutes: Routes = [
         path: 'api',
         children: [
             { path: 'hello', module: HelloModule },
+            { path: 'user', module: UserModule },
         ],
     },
     { path: '*', module: ProxyModule },

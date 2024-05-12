@@ -1,18 +1,31 @@
+/**
+ * 
+ * Please update this so that we can track the latest version.
+ * 
+ * Author           : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Contributor : Ahmad Miqdaad (ahmadmiqdaadz[at]gmail.com)
+ * Last Updated     : 12 May 2024
+ * 
+ * **/
+
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { OIDCStrategy, VerifyCallback, IOIDCStrategyOption } from 'passport-azure-ad';
 import { AuthService } from 'app/core/auth/auth.service';
-import { LogService } from 'app/core/providers/log/log.service';
-import { Request as ExpressRequest } from 'express';
+import { IProfile } from 'passport-azure-ad';
 
 @Injectable()
-export class AzureStrategy extends PassportStrategy(OIDCStrategy, 'azure') {
+export class AzureStrategy extends PassportStrategy(OIDCStrategy, 'azure-ad') {
     
+    private readonly logger = new Logger(AzureStrategy.name);
+    
+    /**
+     * Constructor
+     */
+
     constructor(
-        private _logService: LogService,
         private _authService: AuthService
     ) {
-        console.log("constructor AzureStrategy");
         const config: IOIDCStrategyOption = {
             clientID: process.env.AZURE_CLIENT_ID,
             clientSecret: process.env.AZURE_SECRET_KEY,
@@ -23,47 +36,29 @@ export class AzureStrategy extends PassportStrategy(OIDCStrategy, 'azure') {
             allowHttpForRedirectUrl: true, // Set to false in production
             scope: ['openid','profile'],
             nonceLifetime: 600,
-            nonceMaxAmount: 5,
-            useCookieInsteadOfSession: true,
-            cookieEncryptionKeys: [ { key: '12345678901234567890123456789012', iv: '123456789012' }],
+            nonceMaxAmount: 5
         };
         super(config);
     }
 
-    // authenticate(request: ExpressRequest, options?: IOIDCStrategyOption): void {
-    //     console.log("authenticate AzureStrategy");
-    //     try {
-
-    //         const strategy = request.headers["authentication-strategy"] || request.body["authentication-strategy"];
-    //         console.log("AzureStrategy strategy", strategy);
-
-    //         if (strategy && strategy === "azure") {                
-    //             super.authenticate(request, options);
-    //             request.headers["authentication-strategy"] = "azure";
-    //         }
-
-    //     } catch(error) {
-    //         throw new Error(error);
-    //     }
-
-    // }
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
     
-    async validate(accessToken: string, refreshToken: string, params: any, profile: any, done: VerifyCallback): Promise<any> {
-        console.log("validate AzureStrategy");
+    async validate(profile: IProfile, done: VerifyCallback): Promise<void> {
         try {
-
-            this._logService.debug("Access Token", accessToken);
-            const user = await this._authService.validateAzureADUser(accessToken);
-            this._logService.debug("User", user);
+            this.logger.debug("Microsoft Azure Profile", profile);
+            const user = await this._authService.validateAzureADUser(profile);
+            this.logger.debug("User", user);
 
             if (!user) {
-                return new Error('Unauthorized');
+                throw new Error('Unauthorized');
             }
             
             return done(null, user);
         } catch (error) {
-            this._logService.error(error);
-            return done(error, null, {message: error.message});
+            this.logger.error(error);
+            return done(error, null, { message: error.message });
         }
     }
 }
