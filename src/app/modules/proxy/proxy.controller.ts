@@ -1,11 +1,10 @@
-import { Controller, Get, InternalServerErrorException, Request, Response } from '@nestjs/common';
-import { ProxyService } from './proxy.service';
-import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
-import { Subject, takeUntil } from 'rxjs';
+import { Controller, Get, Request, Response, UseGuards } from '@nestjs/common';
 import { LogService } from 'app/core/providers/log/log.service';
-import { DefaultHttpException } from 'app/shared/custom/http-exception/default.http-exception';
 import { AppCode } from 'app/core/types/app.type';
-import { DefaultHttpResponse } from 'app/shared/custom/http-response/default.http-response';
+import { DefaultHttpException } from 'app/shared/custom/http-exception/default.http-exception';
+import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
+import { ProxyService } from './proxy.service';
+import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 
 @Controller()
 export class ProxyController {
@@ -18,16 +17,22 @@ export class ProxyController {
     }
 
     @Get()
+    @UseGuards(AuthGuard)
     async reverseProxy(
         @Request() request: ExpressRequest, 
         @Response() response: ExpressResponse
     ){
 
         try {
+
+            if (response.headersSent) {
+                return null;
+            }
+
             // Replace this with the URL of your target server
             const targetUrl = process.env.PROXY_URL ?? 'http://example.com'; 
             const result = await this._proxyService.reverseProxy(targetUrl, request);
-            if (result) {
+            if (result) {                
                 response.status(result.status);
                 response.header(result.headers);
                 response.send(result.data);

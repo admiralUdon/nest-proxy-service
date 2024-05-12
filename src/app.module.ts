@@ -4,6 +4,8 @@ import { RouterModule } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { appRoutes } from 'app.routes';
 import { throttlerConfig } from 'app/config/throttler.config';
+import { AuthServiceModule } from 'app/core/auth/auth.module';
+import { SessionServiceModule } from 'app/core/providers/session/session.module';
 import { ExpiredModule } from 'app/modules/expired/expired.module';
 import { HelloModule } from 'app/modules/hello/hello.module';
 import { LoginModule } from 'app/modules/login/login.module';
@@ -15,6 +17,8 @@ import { ProxyModule } from 'app/modules/proxy/proxy.module';
         // Config modules
         ConfigModule.forRoot({expandVariables: true}),
         ThrottlerModule.forRoot(throttlerConfig),
+        AuthServiceModule,
+        SessionServiceModule,
         // Custom modules
         LoginModule,
         LogoutModule,

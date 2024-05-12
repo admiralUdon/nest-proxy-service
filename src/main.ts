@@ -5,6 +5,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from 'app.module';
 import { existsSync } from 'fs-extra';
 import { join } from 'path';
+import { sessionConfig } from 'app/config/session.config';
+import * as session from 'express-session';
+import * as passport from 'passport';
 
 async function bootstrap() {
 
@@ -31,6 +34,15 @@ async function bootstrap() {
      */
     if (process.env.SERVER_CONTEXT) {
         app.setGlobalPrefix(process.env.SERVER_CONTEXT);
+    }
+
+    /**
+     * Set Session
+     */
+    if (process.env.ENABLE_SESSION === "true") {
+        app.use(session(sessionConfig()));
+        app.use(passport.initialize());
+        app.use(passport.session());
     }
 
     /**

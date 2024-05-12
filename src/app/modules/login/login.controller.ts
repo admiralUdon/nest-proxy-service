@@ -1,9 +1,18 @@
-import { Controller, Get, Request, Logger, Render } from '@nestjs/common';
+import { Controller, Get, Request, Response, Logger, Render, Post, UseGuards, ExecutionContext } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+// import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
+import { LogService } from 'app/core/providers/log/log.service';
+import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
+import { Session } from 'express-session';
 
 @Controller()
 export class LoginController {
 
-    private readonly logger = new Logger(LoginController.name);
+    constructor(
+        private _logService: LogService,
+    ) {
+        this._logService.registerClassName(LoginController.name);
+    }
     
     @Get()
     @Render('login')
@@ -14,5 +23,23 @@ export class LoginController {
             azure_enabled   : process.env.AZURE_ENABLED === "true" ?? false,
             azure_SSO_URL   : process.env.AZURE_SSO_URL
         }
+    }
+
+    @Post()
+    @UseGuards(AuthGuard('basic'))
+    async loginBasic(@Request() request: ExpressRequest & { session: Session & { user: any } }, @Response() response) {
+        const { username } = request.body;
+        // Save user to session after successful login
+        request.session.user = { username };
+        return response.redirect('/');
+    }
+
+    @Post('azure')
+    @UseGuards(AuthGuard('azure'))
+    async loginAzure(@Request() request: ExpressRequest & { session: Session & { user: any } }, @Response() response) {
+        const { username } = request.body;
+        // Save user to session after successful login
+        request.session.user = { username };
+        return response.redirect('/');
     }
 }

@@ -1,8 +1,8 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
+import { LogServiceModule } from 'app/core/providers/log/log.module';
 import { ProxyController } from './proxy.controller';
 import { ProxyService } from './proxy.service';
-import { HttpModule } from '@nestjs/axios';
-import { LogServiceModule } from 'app/core/providers/log/log.module';
 
 @Module({
   imports: [HttpModule, LogServiceModule],
