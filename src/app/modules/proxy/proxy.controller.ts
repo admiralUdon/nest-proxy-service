@@ -34,9 +34,17 @@ export class ProxyController {
             // Replace this with the URL of your target server
             const targetUrl = process.env.PROXY_URL ?? 'http://example.com'; 
             const result = await this._proxyService.reverseProxy(targetUrl, request);
-            if (result) {                
+            if (result) {
+                // Set original HTTP status
                 response.status(result.status);
+                // Set original HTTP headers
                 response.header(result.headers);
+                // Set no cache in header 
+                response.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+                response.header('Pragma', 'no-cache');
+                response.header('Expires', '0');
+                response.header('Surrogate-Control', 'no-store');
+                // Send original HTTP data
                 response.send(result.data);
                 return response;
             } else {                
