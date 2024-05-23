@@ -43,8 +43,6 @@ export class HelloController {
                     }
                 });
             }
-
-            throw new Error("hmmmmmm")
     
             const data = {
                 message: "Hello, World!",
