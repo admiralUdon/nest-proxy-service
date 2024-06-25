@@ -24,6 +24,9 @@ export class ProxyService {
     {
         try {
             const proxyUrl = targetUrl + request.originalUrl;
+            const basicToken = btoa(process.env.PROXY_BASICAUTH) ?? null;
+            const authorization = basicToken ? { "Authorization": `Basic ${basicToken}` } : {};
+
             this._logService.debug("proxyUrl", proxyUrl);
             // Need to remove host cause it cause bug
             // because host is not the same with site cert
@@ -31,6 +34,7 @@ export class ProxyService {
             const headers: AxiosRequestConfig = {
                 headers: {
                     ...requestHeaders,
+                    ...authorization
                 },
                 responseType: 'arraybuffer'
             };

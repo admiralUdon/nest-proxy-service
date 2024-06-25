@@ -43,8 +43,8 @@ export class AzureADGuard extends AuthGuard('azure-ad') implements CanActivate {
             const request: ExpressRequest & { session: Session & { user: any } } = context.switchToHttp().getRequest();
     
             /**
-             * request.session.user -> after login baru ada ada value 
-             * request.user -> undefined after login, will only have value after serialized
+             * request.session.user -> after sign-in baru ada ada value 
+             * request.user -> undefined after sign-in, will only have value after serialized
              */
             user = request.session.user ?? request.user ?? user;
         
@@ -53,7 +53,7 @@ export class AzureADGuard extends AuthGuard('azure-ad') implements CanActivate {
                 return null;
             }
         
-            // If error or not authenticated, redirect to /login or throw UnauthorizedException
+            // If error or not authenticated, redirect to /sign-in or throw UnauthorizedException
             if (!user) {
     
                 this.logger.debug("User session missing, consider it expired / unauthorized", user);
@@ -69,8 +69,8 @@ export class AzureADGuard extends AuthGuard('azure-ad') implements CanActivate {
     
                 //  If user are requesting url except /api (page, html) and still unauthenticated
                 if (request && !request.url.includes("/api/")) {
-                    // Redirect to login page
-                    response.redirect('/login?status=failed');
+                    // Redirect to sign-in page
+                    response.redirect('/sign-in?status=failed');
                 }
             }
     

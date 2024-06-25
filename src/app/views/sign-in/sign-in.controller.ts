@@ -7,8 +7,8 @@ import { Request as ExpressRequest } from 'express';
 import { Session } from 'express-session';
 
 @Controller()
-@ApiTags("Login")
-export class LoginController {
+@ApiTags("SignIn")
+export class SignInController {
 
     /**
      * Constructor
@@ -17,7 +17,7 @@ export class LoginController {
     constructor(
         private _logService: LogService,
     ) {
-        this._logService.registerClassName(LoginController.name);
+        this._logService.registerClassName(SignInController.name);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ export class LoginController {
     // -----------------------------------------------------------------------------------------------------
 
     @Get()
-    azureOAuth2Login(
+    azureOAuth2SignIn(
         @Request() request: ExpressRequest, 
         @Response() response,
         @Query('status') status
@@ -34,7 +34,7 @@ export class LoginController {
             return response.redirect('/');
         }        
     
-        return response.render('login', {
+        return response.render('sign-in', {
             app_title       : process.env.APP_TITLE ?? "Nest Proxy App Example",
             app_description : process.env.APP_DESCRIPTION ?? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
             azure_enabled   : process.env.AZURE_ENABLED === "true" ?? false,
@@ -45,20 +45,20 @@ export class LoginController {
 
     @Post()
     @UseGuards(LocalGuard)
-    async loginBasic(@Request() request: ExpressRequest & { session: Session & { user: any } }, @Response() response) {
-        // Save user to session after successful login
+    async signInBasic(@Request() request: ExpressRequest & { session: Session & { user: any } }, @Response() response) {
+        // Save user to session after successful sign-in
         request.session.user = request.user;
         return response.redirect('/');
     }
 
     @Post('azure')
     @UseGuards(AzureADGuard)
-    loginAzure(){}
+    signInAzure(){}
 
     @Get('azure/callback')
     @UseGuards(AzureADGuard)
-    async loginAzureCallback(@Request() request: ExpressRequest & { session: Session & { user: any } }, @Response() response) {
-        // Save user to session after successful login
+    async signInAzureCallback(@Request() request: ExpressRequest & { session: Session & { user: any } }, @Response() response) {
+        // Save user to session after successful sign-in
         request.session.user = request.user;
         return response.redirect('/');
     }

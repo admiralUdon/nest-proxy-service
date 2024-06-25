@@ -9,17 +9,17 @@
 <body class="w-screen h-screen bg-gray-900">
     <div class="flex flex-col justify-center items-center w-full h-full">
         {{#if status}}
-            <span class="mb-4 text-white">Invalid login / session expired</span>
+            <span class="mb-4 text-white">Invalid sign-in / session expired</span>
         {{/if}}
         <div class="flex flex-col items-center md:flex-row w-full lg:w-[920px] bg-white bg-opacity-70 p-4 mx-2 rounded-lg">
-            {{!-- Username & Password Login --}}
+            {{!-- Username & Password Sign-in --}}
             <div class="w-full lg:w-1/2 flex flex-col mb-2 lg:mb-0">
                 <div class="flex flex-col mb-4">
                     <span class="text-2xl font-bold mb-2 text-center">{{ app_title }}</span>
                     <span class="text-sm font-semibold text-center">{{ app_description }}</span>
                 </div>
                 <div class="flex items-center justify-center w-full ">
-                    <form action="/login" method="post" class="flex flex-col w-96">
+                    <form action="/sign-in" method="post" class="flex flex-col w-96">
                         <input name="username" class="p-1 mb-2 rounded-md text-sm" type="text" placeholder="Email / Username">
                         <input name="password" class="p-1 mb-2 rounded-md text-sm" type="password" placeholder="Password">
                         <input name="authentication-strategy" type="hidden" value="basic" class="h-0 w-0 hidden">
@@ -27,11 +27,11 @@
                     </form>
                 </div>
             </div>
-            {{!-- SSO Login --}}
+            {{!-- SSO Sign In --}}
             <div class="flex flex-col items-center w-full lg:w-1/2 h-full">
                 <span class="text-sm text-gray-500">or sign in with</span>
                 <div class="w-96 border-t border-gray-500 py-2"></div>
-                <form action="/login/azure" method="post" class="flex items-center justify-center w-full mb-2">
+                <form action="/sign-in/azure" method="post" class="flex items-center justify-center w-full mb-2">
                     <button class="flex flex-row w-96 items-center justify-center bg-gray-900 rounded-md p-3">
                         <input name="authentication-strategy" type="hidden" value="azure" class="h-0 w-0 hidden">
                         <img class="w-4 mr-2" src="images/Microsoft_logo.png" alt="Microsoft">
@@ -39,21 +39,21 @@
                     </button>
                 </form>
                 <div class="flex items-center justify-center w-full mb-2">
-                    <button class="flex flex-row w-96 items-center justify-center bg-gray-900 rounded-md p-3">
+                    <button onclick="alert('Coming Soon ?')" class="flex flex-row w-96 items-center justify-center bg-gray-900 rounded-md p-3">
                         <img class="w-4 mr-2" src="images/Google_logo.webp" alt="Microsoft">
-                        <a href="{{ azure_SSO_URL }}" class="text-sm text-white">Google Login</a>
+                        <span class="text-sm text-white">Google Login</span>
                     </button>
                 </div>
                 <div class="flex items-center justify-center w-full mb-2">
-                    <button class="flex flex-row w-96 items-center justify-center bg-gray-900 rounded-md p-3">
+                    <button onclick="alert('Coming Soon ?')" class="flex flex-row w-96 items-center justify-center bg-gray-900 rounded-md p-3">
                         <img class="w-4 mr-2" src="images/Apple_logo.png" alt="Microsoft">
-                        <a href="{{ azure_SSO_URL }}" class="text-sm text-white">Apple Login</a>
+                        <span class="text-sm text-white">Apple Login</span>
                     </button>
                 </div>
                 <div class="flex items-center justify-center w-full mb-2">
-                    <button class="flex flex-row w-96 items-center justify-center bg-gray-900 rounded-md p-3">
+                    <button onclick="alert('Coming Soon ?')" class="flex flex-row w-96 items-center justify-center bg-gray-900 rounded-md p-3">
                         <img class="w-5 mr-2" src="images/Discord_logo.png" alt="Microsoft">
-                        <a href="{{ azure_SSO_URL }}" class="text-sm text-white">Discord Login</a>
+                        <span class="text-sm text-white">Discord Login</span>
                     </button>
                 </div>
             </div>

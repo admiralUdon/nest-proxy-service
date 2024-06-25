@@ -21,7 +21,7 @@ export class ExpiredController {
 
     @Get()
     @Render('expired')
-    azureOAuth2Login(@Request() request) {
+    signInExpired(@Request() request) {
         return {
             app_title       : process.env.APP_TITLE ?? "Nest Proxy App Example",
             app_description : process.env.APP_DESCRIPTION ?? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",

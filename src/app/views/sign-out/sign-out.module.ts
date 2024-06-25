@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { LogServiceModule } from 'app/core/providers/log/log.module';
-import { LoginController } from 'app/views/login/login.controller';
+import { SignOutController } from 'app/views/sign-out/sign-out.controller';
 
 @Module({
     imports: [LogServiceModule],
-    controllers: [LoginController],
-    providers: []
+    controllers: [SignOutController],
 })
-export class LoginModule {}
+export class SignOutModule {}

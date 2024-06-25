@@ -5,7 +5,7 @@ import { DefaultHttpException } from 'app/shared/custom/http-exception/default.h
 
 @Controller()
 @ApiExcludeController()
-export class LogoutController {
+export class SignOutController {
 
     /**
      * Constructor
@@ -14,7 +14,7 @@ export class LogoutController {
     constructor(
         private _logService: LogService,
     ) {
-        this._logService.registerClassName(LogoutController.name);
+        this._logService.registerClassName(SignOutController.name);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ export class LogoutController {
     // -----------------------------------------------------------------------------------------------------
     
     @Get()
-    azureOAuth2Login(@Request() request, @Response() response) {
+    signOut(@Request() request, @Response() response) {
 
         try {
 
@@ -38,7 +38,7 @@ export class LogoutController {
                 response.clearCookie('connect.sid', { path: '/' });
             });
         
-            return response.render('logout', {
+            return response.render('sign-out', {
                 app_title       : process.env.APP_TITLE ?? "Nest Proxy App Example",
                 app_description : process.env.APP_DESCRIPTION ?? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                 azure_enabled   : process.env.AZURE_ENABLED === "true" ?? false,
