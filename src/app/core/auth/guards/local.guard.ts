@@ -27,10 +27,13 @@ export class LocalGuard extends AuthGuard('local') implements CanActivate {
         try {
             const request = context.switchToHttp().getRequest();
 
-            // Check whitelisted unprotected enpoint
-            // (this endpoints can be access without logged in)
-            const whitelistedEndpoints: string[] = process.env.PROXY_WHITELISTED_ENDPOINTS.split(",");
-            if (whitelistedEndpoints && whitelistedEndpoints.includes(request.url)) {
+            // Read the whitelisted endpoints from the environment variable
+            const whitelistedEndpoints: string[] = process.env.PROXY_WHITELISTED_PATHS.split(",");
+            // Convert the whitelisted endpoints into an array of RegExp objects
+            const whitelistedRegexes: RegExp[] = whitelistedEndpoints.map(endpoint => new RegExp(endpoint));
+            // Check if the request URL matches any of the whitelisted regular expressions
+            const isWhitelisted = whitelistedRegexes.some(regex => regex.test(request.url));
+            if (isWhitelisted) {
                 return true;
             }
 
